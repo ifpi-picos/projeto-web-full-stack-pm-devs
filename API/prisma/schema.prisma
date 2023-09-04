@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  name String
+  username String
+  email String
+  password String
+  profile_image String
+  created_at DateTime
+  member Member?
+  posts Post[]
+}
+
+model Admin {
+  id String @id @default(uuid())
+  name String
+  email String
+  password String
+  phoneNumber String
+  created_at DateTime
+  group Group? 
+}
+
+model Group {
+  id String @id @default(uuid())
+  name String
+  created_at DateTime
+  adminId String @unique
+  admin Admin @relation(fields: [adminId], references: [id])
+  murais Mural[]
+  members Member[]
+}
+
+model Mural {
+  id String @id @default(uuid())
+  name String
+  category String
+  created_at DateTime
+  groupId String
+  group Group @relation(fields: [groupId], references: [id])
+  posts Post[]
+}
+
+model Member {
+  id String @id @default(uuid())
+  category String
+  created_at DateTime
+  userId String @unique
+  user User @relation(fields: [userId], references: [id])
+  groupId String
+  group Group @relation(fields: [groupId], references: [id])
+}
+
+model Post {
+  id String @id @default(uuid())
+  content String
+  media String[]
+  created_at DateTime
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  muralId String
+  mural Mural @relation(fields: [muralId], references: [id])
+}
