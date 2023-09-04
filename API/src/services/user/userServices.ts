@@ -9,7 +9,11 @@ export class userService implements IUserService{
       return this.userRepository.getAllUsers();
   }
 
-  async getUserById(id: string): Promise<Omit<User, "password"> | null> {
+  async getUserById(id: string): Promise<User | null> {
       return await this.userRepository.getUserById(id);
+  }
+
+  async addUser(user: User): Promise<Omit<User, "password"> | null> {
+      return await this.userRepository.addUser(user);
   }
 }

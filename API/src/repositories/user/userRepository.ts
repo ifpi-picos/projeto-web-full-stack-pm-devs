@@ -9,11 +9,24 @@ export class userRepository implements IUserRepository{
       return await prisma.user.findMany();
   }
 
-  async getUserById(id: string): Promise<Omit<User, "password"> | null> {
+  async getUserById(id: string): Promise<User| null> {
       return await prisma.user.findUnique({
         where: {
           id: id
         }
       });
+  }
+
+  async addUser({ name, username, email, password,  } : User): Promise<Omit<User, "password"> | null> {
+      return await prisma.user.create({
+        data: {
+          name,
+          username,
+          email,
+          password,
+          profile_image: "",
+          created_at: new Date()
+        }
+      })
   }
 }
