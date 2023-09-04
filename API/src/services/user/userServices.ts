@@ -8,4 +8,8 @@ export class userService implements IUserService{
   async getAllUsers(): Promise<User[]> {
       return this.userRepository.getAllUsers();
   }
+
+  async getUserById(id: string): Promise<Omit<User, "password"> | null> {
+      return await this.userRepository.getUserById(id);
+  }
 }

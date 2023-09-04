@@ -8,4 +8,12 @@ export class userRepository implements IUserRepository{
   async getAllUsers(): Promise<User[]> {
       return await prisma.user.findMany();
   }
+
+  async getUserById(id: string): Promise<Omit<User, "password"> | null> {
+      return await prisma.user.findUnique({
+        where: {
+          id: id
+        }
+      });
+  }
 }
