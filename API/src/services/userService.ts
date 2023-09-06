@@ -1,9 +1,11 @@
+import { User } from "../models/User";
+
+// Interfaces
+import { HttpResponse } from "../interfaces/interfaces";
 import {
-  HttpResponse,
   IUserRepository,
   IUserService,
-} from "../interfaces/interfaces";
-import { User } from "../models/User";
+} from "../interfaces/userInterface";
 
 export class userService implements IUserService {
   constructor(private readonly userRepository: IUserRepository) {}

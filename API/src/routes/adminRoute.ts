@@ -2,20 +2,20 @@ import { Request, Response } from "express";
 import { Router } from "express";
 
 // Models
-import { User } from "../models/User";
+import { Admin } from "../models/Admin";
 
 // Services and Repositories
-import { userRepository } from "../repositories/userRepository";
-import { userService } from "../services/userService";
+import { AdminRepository } from "../repositories/adminRepository";
+import { AdminService } from "../services/adminService";
 
 const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const repository = await new userRepository();
-    const { statusCode, body } = await new userService(
+    const repository = await new AdminRepository();
+    const { statusCode, body } = await new AdminService(
       repository
-    ).getAllUsers();
+    ).getAllAdmins();
 
     res.status(statusCode).json(body);
   } catch (error) {
@@ -26,8 +26,8 @@ router.get("/", async (req: Request, res: Response) => {
 router.get("/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const repository = await new userRepository();
-    const { statusCode, body } = await new userService(repository).getUserById(
+    const repository = await new AdminRepository();
+    const { statusCode, body } = await new AdminService(repository).getAdminById(
       id
     );
 
@@ -39,30 +39,31 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const user: User = req.body;
+    const admin: Admin = req.body;
 
-    const requiredFields: (keyof User)[] = [
+    const requiredFields: (keyof Admin)[] = [
       "name",
       "username",
       "email",
       "password",
       "confirmPassword",
+      "phoneNumber"
     ];
     for (const field of requiredFields) {
-      if (!user[field] || user[field]?.toString().trim() === "") {
+      if (!admin[field] || admin[field]?.toString().trim() === "") {
         return res.status(400).json(`The field ${field} is required.`);
       }
     }
 
-    if (user.password !== user.confirmPassword)
+    if (admin.password !== admin.confirmPassword)
       return res.status(400).json("Passwords do not match.");
-    if (user.password.length < 8)
+    if (admin.password.length < 8)
       return res
         .status(400)
         .json("The password needs at least eight characters.");
 
-    const repository = await new userRepository();
-    const { statusCode, body } = await new userService(repository).addUser(user);
+    const repository = await new AdminRepository();
+    const { statusCode, body } = await new AdminService(repository).addAdmin(admin);
 
     res.status(statusCode).json(body);
   } catch (error) {

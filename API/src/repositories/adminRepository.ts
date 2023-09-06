@@ -1,21 +1,21 @@
+import { IAdminRepository } from "../interfaces/adminInterface";
 import { PrismaClient } from "@prisma/client";
-import { IUserRepository } from "../interfaces/userInterface";
-import { User } from "../models/User";
+import { Admin } from "../models/Admin";
 
 const prisma = new PrismaClient();
 
-export class userRepository implements IUserRepository {
-  async getAllUsers(): Promise<User[]> {
+export class AdminRepository implements IAdminRepository {
+  async getAllAdmins(): Promise<Admin[]> {
     try {
-      return await prisma.user.findMany();
+      return await prisma.admin.findMany();
     } catch (error) {
       throw new Error(`error: ${error}`);
     }
   }
 
-  async getUserById(id: string): Promise<User | null> {
+  async getAdminById(id: string): Promise<Admin | null> {
     try {
-      return await prisma.user.findUnique({
+      return await prisma.admin.findUnique({
         where: {
           id: id,
         },
@@ -25,9 +25,9 @@ export class userRepository implements IUserRepository {
     }
   }
 
-  async getUserByEmail(email: string): Promise<User | null> {
+  async getAdminByEmail(email: string): Promise<Admin | null> {
     try {
-      return await prisma.user.findUnique({
+      return await prisma.admin.findUnique({
         where: {
           email: email,
         },
@@ -37,20 +37,16 @@ export class userRepository implements IUserRepository {
     }
   }
 
-
-  async addUser({
-    name,
-    username,
-    email,
-    password,
-  }: User): Promise<User | null> {
+  async addAdmin({ name, username, email, password, phoneNumber }: Admin): Promise<Admin | null> {
     try {
-      return await prisma.user.create({
+      return await prisma.admin.create({
         data: {
           name,
           username,
           email,
           password,
+          phoneNumber,
+          isAdmin: true,
           profile_image: "",
           created_at: new Date(),
         },
