@@ -2,6 +2,8 @@ import { IAdminRepository, IAdminService } from "../interfaces/adminInterface";
 import { HttpResponse } from "../interfaces/interfaces";
 import { Admin } from "../models/Admin";
 
+import { hashPass } from "./userService";
+
 
 export class AdminService implements IAdminService {
   constructor(private readonly adminRepository: IAdminRepository){}
@@ -59,6 +61,9 @@ export class AdminService implements IAdminService {
         statusCode: 400,
         body: "Admin already exists."
       }
+
+      // Hash password
+      admin.password = await hashPass(admin.password);
 
       const newAdmin = await this.adminRepository.addAdmin(admin);
 

@@ -1,4 +1,5 @@
 import { User } from "../models/User";
+import bcrypt from "bcrypt";
 
 // Interfaces
 import { HttpResponse } from "../interfaces/interfaces";
@@ -6,6 +7,13 @@ import {
   IUserRepository,
   IUserService,
 } from "../interfaces/userInterface";
+
+export const hashPass = async (password: string): Promise<string> => {
+  const salt = process.env.BCRYPT_SALT || '10';
+  const saltValue = await bcrypt.genSaltSync(parseInt(salt));
+  const hash = await bcrypt.hashSync(password, saltValue);
+  return hash;
+}
 
 export class userService implements IUserService {
   constructor(private readonly userRepository: IUserRepository) {}
@@ -67,6 +75,9 @@ export class userService implements IUserService {
         statusCode: 400,
         body: "User already exists."
       }
+
+      // Hash password
+      user.password = await hashPass(user.password);
 
       const newUser = await this.userRepository.addUser(user);
 
