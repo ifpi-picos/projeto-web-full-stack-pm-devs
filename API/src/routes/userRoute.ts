@@ -8,6 +8,9 @@ import { User } from "../models/User";
 import { userRepository } from "../repositories/userRepository";
 import { userService } from "../services/userService";
 
+// Middleware
+import { CustomRequest, validateToken } from "../middlewares/validateToken";
+
 const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
@@ -62,12 +65,45 @@ router.post("/", async (req: Request, res: Response) => {
         .json("The password needs at least eight characters.");
 
     const repository = await new userRepository();
-    const { statusCode, body } = await new userService(repository).addUser(user);
+    const { statusCode, body } = await new userService(repository).addUser(
+      user
+    );
 
     res.status(statusCode).json(body);
   } catch (error) {
     res.status(500).json({ error: error });
   }
+});
+
+router.post("/login", async (req: Request, res: Response) => {
+  try {
+    const user: Pick<User, "email" | "password"> = req.body;
+
+    const requiredFields: (keyof Pick<User, "email" | "password">)[] = [
+      "email",
+      "password",
+    ];
+    for (const field of requiredFields) {
+      if (!user[field] || user[field].toString().trim() === "") {
+        return res.status(400).json(`The field ${field} is required.`);
+      }
+    }
+
+    const repository = await new userRepository();
+    const { statusCode, body } = await new userService(repository).loginUser(
+      user.email,
+      user.password
+    );
+
+    res.status(statusCode).json(body);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+
+router.post("/token", validateToken, async (req: Request, res: Response) => {
+  const user = (req as CustomRequest).user;
+  res.send(user);
 });
 
 export default router;
