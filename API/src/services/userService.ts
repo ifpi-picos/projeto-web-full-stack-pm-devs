@@ -2,7 +2,6 @@ import { User } from "../models/User";
 
 // Authentication
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 // Interfaces
 import { HttpResponse } from "../interfaces/interfaces";
@@ -16,19 +15,6 @@ export const hashPass = async (password: string): Promise<string> => {
   const saltValue = await bcrypt.genSaltSync(parseInt(salt));
   const hash = await bcrypt.hashSync(password, saltValue);
   return hash;
-}
-
-export const compareHash = async (password: string, hash: string): Promise<boolean> => {
-  return await bcrypt.compareSync(password, hash)
-}
-
-export const generateToken = async (user: Omit<User, "password">) => {
-  const SECRET = process.env.JWT_SECRET_KEY || "SECRET";
-  const token = jwt.sign({
-    data: user,
-  }, SECRET, { expiresIn: "1h" });
-
-  return token;
 }
 
 export class userService implements IUserService {
@@ -94,6 +80,7 @@ export class userService implements IUserService {
 
       // Hash password
       user.password = await hashPass(user.password);
+      user.username = user.username.toLowerCase();
 
       const newUser = await this.userRepository.addUser(user);
 
@@ -111,37 +98,6 @@ export class userService implements IUserService {
         statusCode: 200,
         body: userWithoutPass,
       };
-    } catch (error) {
-      return {
-        statusCode: 500,
-        body: `Error: ${error}`,
-      };
-    }
-  }
-
-  async loginUser(email: string, password: string): Promise<HttpResponse<Omit<User, "password">>> {
-    try {
-      const userRegistered = await this.userRepository.getUserByEmail(email);
-      if(!userRegistered) return {
-        statusCode: 400,
-        body: "User not registered."
-      }
-  
-      const matchPassword = await compareHash(password, userRegistered.password);
-      if(!matchPassword) return {
-        statusCode: 400,
-        body: "Incorrect password."
-      }
-  
-      const { password: pass, ...userWithoutPassword } = userRegistered;
-      pass;
-
-      const token = await generateToken(userWithoutPassword);
-  
-      return {
-        statusCode: 200,
-        body: token
-      }
     } catch (error) {
       return {
         statusCode: 500,

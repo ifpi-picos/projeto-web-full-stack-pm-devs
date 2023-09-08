@@ -12,5 +12,4 @@ export interface IUserService {
   getAllUsers(): Promise<HttpResponse<User[]>>;
   getUserById(id: string): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>>;
   addUser(user: User): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>>;
-  loginUser(email: string, password: string): Promise<HttpResponse<Omit<User, "password">>>;
 }

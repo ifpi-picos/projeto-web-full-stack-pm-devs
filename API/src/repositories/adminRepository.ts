@@ -4,7 +4,7 @@ import { Admin } from "../models/Admin";
 
 const prisma = new PrismaClient();
 
-export class AdminRepository implements IAdminRepository {
+export class adminRepository implements IAdminRepository {
   async getAllAdmins(): Promise<Admin[]> {
     try {
       return await prisma.admin.findMany();
@@ -37,12 +37,12 @@ export class AdminRepository implements IAdminRepository {
     }
   }
 
-  async addAdmin({ name, username, email, password, phoneNumber }: Admin): Promise<Admin | null> {
+  async addAdmin({ name, email, password, phoneNumber }: Admin): Promise<Admin | null> {
     try {
       return await prisma.admin.create({
         data: {
           name,
-          username,
+          username: "admin",
           email,
           password,
           phoneNumber,

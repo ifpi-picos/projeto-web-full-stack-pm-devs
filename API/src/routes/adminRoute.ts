@@ -5,14 +5,14 @@ import { Router } from "express";
 import { Admin } from "../models/Admin";
 
 // Services and Repositories
-import { AdminRepository } from "../repositories/adminRepository";
+import { adminRepository } from "../repositories/adminRepository";
 import { AdminService } from "../services/adminService";
 
 const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const repository = await new AdminRepository();
+    const repository = await new adminRepository();
     const { statusCode, body } = await new AdminService(
       repository
     ).getAllAdmins();
@@ -26,7 +26,7 @@ router.get("/", async (req: Request, res: Response) => {
 router.get("/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const repository = await new AdminRepository();
+    const repository = await new adminRepository();
     const { statusCode, body } = await new AdminService(repository).getAdminById(
       id
     );
@@ -43,7 +43,6 @@ router.post("/", async (req: Request, res: Response) => {
 
     const requiredFields: (keyof Admin)[] = [
       "name",
-      "username",
       "email",
       "password",
       "confirmPassword",
@@ -62,7 +61,7 @@ router.post("/", async (req: Request, res: Response) => {
         .status(400)
         .json("The password needs at least eight characters.");
 
-    const repository = await new AdminRepository();
+    const repository = await new adminRepository();
     const { statusCode, body } = await new AdminService(repository).addAdmin(admin);
 
     res.status(statusCode).json(body);
