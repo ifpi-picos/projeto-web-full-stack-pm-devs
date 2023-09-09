@@ -17,7 +17,7 @@ export const hashPass = async (password: string): Promise<string> => {
   return hash;
 }
 
-export class userService implements IUserService {
+export class UserService implements IUserService {
   constructor(private readonly userRepository: IUserRepository) {}
 
   async getAllUsers(): Promise<HttpResponse<User[]>> {

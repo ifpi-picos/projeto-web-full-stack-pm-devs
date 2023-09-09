@@ -5,8 +5,8 @@ import { Router } from "express";
 import { User } from "../models/User";
 
 // Services and Repositories
-import { userRepository } from "../repositories/userRepository";
-import { userService } from "../services/userService";
+import { UserRepository } from "../repositories/userRepository";
+import { UserService } from "../services/userService";
 
 // Middleware
 import { CustomRequest, validateToken } from "../middlewares/validateToken";
@@ -15,8 +15,8 @@ const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const repository = await new userRepository();
-    const { statusCode, body } = await new userService(
+    const repository = await new UserRepository();
+    const { statusCode, body } = await new UserService(
       repository
     ).getAllUsers();
 
@@ -29,8 +29,8 @@ router.get("/", async (req: Request, res: Response) => {
 router.get("/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const repository = await new userRepository();
-    const { statusCode, body } = await new userService(repository).getUserById(
+    const repository = await new UserRepository();
+    const { statusCode, body } = await new UserService(repository).getUserById(
       id
     );
 
@@ -64,8 +64,8 @@ router.post("/", async (req: Request, res: Response) => {
         .status(400)
         .json("The password needs at least eight characters.");
 
-    const repository = await new userRepository();
-    const { statusCode, body } = await new userService(repository).addUser(
+    const repository = await new UserRepository();
+    const { statusCode, body } = await new UserService(repository).addUser(
       user
     );
 

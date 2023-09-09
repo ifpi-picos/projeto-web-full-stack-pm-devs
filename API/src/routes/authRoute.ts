@@ -5,11 +5,11 @@ import { Router } from "express";
 import { User } from "../models/User";
 
 // Services and Repositories
-import { userRepository } from "../repositories/userRepository";
-import { adminRepository } from "../repositories/adminRepository";
+import { UserRepository } from "../repositories/userRepository";
+import { AdminRepository } from "../repositories/adminRepository";
 
 // Services
-import { authService } from "../services/authService";
+import { AuthService } from "../services/authService";
 
 const router = Router();
 
@@ -27,9 +27,9 @@ router.post("/login", async (req: Request, res: Response) => {
       }
     }
 
-    const repositoryUser = await new userRepository();
-    const repositoryAdmin = await new adminRepository();
-    const { statusCode, body } = await new authService(repositoryUser, repositoryAdmin).login(
+    const repositoryUser = await new UserRepository();
+    const repositoryAdmin = await new AdminRepository();
+    const { statusCode, body } = await new AuthService(repositoryUser, repositoryAdmin).login(
       user.email,
       user.password
     );

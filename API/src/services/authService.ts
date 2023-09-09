@@ -21,7 +21,7 @@ export const generateToken = (user: Omit<User, "password">): string => {
 }
 
 
-export class authService implements IAuthService {
+export class AuthService implements IAuthService {
   constructor(private readonly userRepository: IUserRepository, private readonly adminRepository: IAdminRepository) {}
 
   async login(email: string, password: string): Promise<HttpResponse<string>> {

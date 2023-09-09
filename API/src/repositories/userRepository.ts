@@ -4,7 +4,7 @@ import { User } from "../models/User";
 
 const prisma = new PrismaClient();
 
-export class userRepository implements IUserRepository {
+export class UserRepository implements IUserRepository {
   async getAllUsers(): Promise<User[]> {
     try {
       return await prisma.user.findMany();

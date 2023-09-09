@@ -4,7 +4,7 @@ import { Admin } from "../models/Admin";
 
 const prisma = new PrismaClient();
 
-export class adminRepository implements IAdminRepository {
+export class AdminRepository implements IAdminRepository {
   async getAllAdmins(): Promise<Admin[]> {
     try {
       return await prisma.admin.findMany();

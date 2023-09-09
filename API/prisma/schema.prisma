@@ -29,7 +29,7 @@ model Admin {
   profile_image String
   created_at DateTime
   isAdmin Boolean
-  group Group? 
+  group Group?
 }
 
 model Group {

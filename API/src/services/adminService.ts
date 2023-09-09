@@ -1,4 +1,5 @@
-import { IAdminRepository, IAdminService } from "../interfaces/adminInterface";
+import { AdminAndGroup, IAdminRepository, IAdminService } from "../interfaces/adminInterface";
+import { IGroupRepository } from "../interfaces/groupInterface";
 import { HttpResponse } from "../interfaces/interfaces";
 import { Admin } from "../models/Admin";
 
@@ -6,7 +7,7 @@ import { hashPass } from "./userService";
 
 
 export class AdminService implements IAdminService {
-  constructor(private readonly adminRepository: IAdminRepository){}
+  constructor(private readonly adminRepository: IAdminRepository, private readonly groupRepository: IGroupRepository){}
 
   async getAllAdmins(): Promise<HttpResponse<Admin[]>> {
     try {
@@ -30,7 +31,7 @@ export class AdminService implements IAdminService {
     }
   }
 
-  async getAdminById(id: string): Promise<HttpResponse<Omit<Admin, "password" | "confirmPassword"> | null>> {
+  async getAdminById(id: string): Promise<HttpResponse<AdminAndGroup | null>> {
     try {
       const admin = await this.adminRepository.getAdminById(id);
       if (!admin)
@@ -42,9 +43,17 @@ export class AdminService implements IAdminService {
       const { password, ...adminWithoutPass } = admin;
       password;
 
+      const group = await this.groupRepository.getGroupByAdminId(id);
+      if(!group) throw new Error();
+
+      const adminGroup: AdminAndGroup = {
+        admin: adminWithoutPass,
+        group
+      }
+
       return {
         statusCode: 200,
-        body: adminWithoutPass,
+        body: adminGroup
       };
     } catch (error) {
       return {
@@ -76,6 +85,9 @@ export class AdminService implements IAdminService {
       const { password, confirmPassword, ...adminWithoutPass } = newAdmin;
       password;
       confirmPassword;
+
+      const newGroup = await this.groupRepository.createGroup(newAdmin.name, newAdmin.id);
+      if(!newGroup) throw new Error();
 
       return {
         statusCode: 200,
