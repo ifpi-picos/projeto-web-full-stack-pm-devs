@@ -37,7 +37,6 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-
   async addUser({
     name,
     username,
@@ -58,5 +57,17 @@ export class UserRepository implements IUserRepository {
     } catch (error) {
       throw new Error(`error: ${error}`);
     }
+  }
+
+  async removeUser(id: string): Promise<User | null> {
+    try {
+      return await prisma.user.delete({
+        where: {
+          id: id
+        }
+      })
+    } catch (error) {
+      throw new Error(`error: ${error}`);
+    }  
   }
 }
