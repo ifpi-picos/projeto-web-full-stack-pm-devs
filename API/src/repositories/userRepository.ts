@@ -59,6 +59,20 @@ export class UserRepository implements IUserRepository {
     }
   }
 
+  async updateUser(id: string, { name, username, password, profile_image }: User): Promise<User | null> {
+    return await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name,
+        username,
+        password,
+        profile_image
+      }
+    })
+  }
+
   async removeUser(id: string): Promise<User | null> {
     try {
       return await prisma.user.delete({

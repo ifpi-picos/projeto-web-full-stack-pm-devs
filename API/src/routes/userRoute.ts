@@ -74,6 +74,14 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
+router.put("/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const user = req.body;
+  const { statusCode, body } = await new UserService(repositoryUser).updateUser(id, user);
+
+  res.status(statusCode).json(body);
+})
+
 router.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const { statusCode, body } = await new UserService(repositoryUser).removeUser(id);

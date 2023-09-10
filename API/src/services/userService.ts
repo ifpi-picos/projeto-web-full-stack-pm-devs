@@ -105,6 +105,42 @@ export class UserService implements IUserService {
       };
     }
   }
+  
+  async updateUser(id: string, dataUser: User): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>> {
+    try {
+      const userExists = await this.userRepository.getUserById(id);
+      if(!userExists) return {
+        statusCode: 404,
+        body: "User not found.",
+      };
+
+      const fields: (keyof { name: string, username: string, password: string, profile_image: string })[] = ["name", "username", "password", "profile_image"];
+      for(const field of fields) {
+        if(!dataUser[field]) {
+          dataUser[field] = userExists[field]!;
+        }
+      }
+
+      const newUser = await this.userRepository.updateUser(id, dataUser);
+      if(!newUser) return {
+        statusCode: 400,
+        body: "User not updated."
+      }
+
+      const { password, confirmPassword, ...newUserWithoutPassword } = newUser;
+      password; confirmPassword;
+      
+      return {
+        statusCode: 200,
+        body: newUserWithoutPassword
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: `Error: ${error}`,
+      };
+    }
+  }
 
   async removeUser(id: string): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>>{
     try {
