@@ -42,6 +42,7 @@ export class UserRepository implements IUserRepository {
     username,
     email,
     password,
+    isAdmin
   }: User): Promise<User | null> {
     try {
       return await prisma.user.create({
@@ -51,6 +52,7 @@ export class UserRepository implements IUserRepository {
           email,
           password,
           profile_image: "",
+          isAdmin,
           created_at: new Date(),
         },
       });

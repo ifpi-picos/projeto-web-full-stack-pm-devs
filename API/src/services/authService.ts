@@ -1,4 +1,3 @@
-import { IAdminRepository } from "../interfaces/adminInterface";
 import { IAuthService } from "../interfaces/authInterface";
 import { HttpResponse } from "../interfaces/interfaces";
 import { IUserRepository } from "../interfaces/userInterface";
@@ -22,19 +21,18 @@ export const generateToken = (user: Omit<User, "password">): string => {
 
 
 export class AuthService implements IAuthService {
-  constructor(private readonly userRepository: IUserRepository, private readonly adminRepository: IAdminRepository) {}
+  constructor(private readonly userRepository: IUserRepository) {}
 
   async login(email: string, password: string): Promise<HttpResponse<string>> {
     try {
       const user = await this.userRepository.getUserByEmail(email);
-      const admin = await this.adminRepository.getAdminByEmail(email);
 
-      if(!user && !admin) return {
+      if(!user) return {
         statusCode: 400,
         body: "User not registered."
       }
 
-      const current = user || admin;
+      const current = user;
       const matchPassword = await compareHash(password, current!.password);
       if(!matchPassword) return {
         statusCode: 400,

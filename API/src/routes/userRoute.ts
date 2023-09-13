@@ -10,15 +10,18 @@ import { UserService } from "../services/userService";
 
 // Middleware
 import { CustomRequest, validateToken } from "../middlewares/validateToken";
+import { GroupRepository } from "../repositories/groupRepository";
 
 const router = Router();
 
 const repositoryUser = new UserRepository();
+const groupRepository = new GroupRepository();
 
 router.get("/", async (req: Request, res: Response) => {
   try {
     const { statusCode, body } = await new UserService(
-      repositoryUser
+      repositoryUser,
+      groupRepository
     ).getAllUsers();
 
     res.status(statusCode).json(body);
@@ -30,9 +33,10 @@ router.get("/", async (req: Request, res: Response) => {
 router.get("/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { statusCode, body } = await new UserService(repositoryUser).getUserById(
-      id
-    );
+    const { statusCode, body } = await new UserService(
+      repositoryUser,
+      groupRepository
+    ).getUserById(id);
 
     res.status(statusCode).json(body);
   } catch (error) {
@@ -42,7 +46,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const user: User = req.body;
+    const data = req.body;
 
     const requiredFields: (keyof User)[] = [
       "name",
@@ -50,23 +54,32 @@ router.post("/", async (req: Request, res: Response) => {
       "email",
       "password",
       "confirmPassword",
+      "isAdmin",
     ];
     for (const field of requiredFields) {
-      if (!user[field] || user[field]?.toString().trim() === "") {
+      const namedGroup: (keyof {groupName: string}) = "groupName"
+
+      if(data["isAdmin"] && !data[namedGroup]) {
+        return res.status(400).json(`The field groupName is required.`);
+      }
+
+
+      if (data[field] === null || data[field] === undefined || data[field]?.toString().trim() === "") {
         return res.status(400).json(`The field ${field} is required.`);
       }
     }
 
-    if (user.password !== user.confirmPassword)
+    if (data.password !== data.confirmPassword)
       return res.status(400).json("Passwords do not match.");
-    if (user.password.length < 8)
+    if (data.password.length < 8)
       return res
         .status(400)
         .json("The password needs at least eight characters.");
 
-    const { statusCode, body } = await new UserService(repositoryUser).addUser(
-      user
-    );
+    const { statusCode, body } = await new UserService(
+      repositoryUser,
+      groupRepository
+    ).addUser(data);
 
     res.status(statusCode).json(body);
   } catch (error) {
@@ -77,17 +90,23 @@ router.post("/", async (req: Request, res: Response) => {
 router.put("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const user = req.body;
-  const { statusCode, body } = await new UserService(repositoryUser).updateUser(id, user);
+  const { statusCode, body } = await new UserService(
+    repositoryUser,
+    groupRepository
+  ).updateUser(id, user);
 
   res.status(statusCode).json(body);
-})
+});
 
 router.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { statusCode, body } = await new UserService(repositoryUser).removeUser(id);
+  const { statusCode, body } = await new UserService(
+    repositoryUser,
+    groupRepository
+  ).removeUser(id);
 
   res.status(statusCode).json(body);
-})
+});
 
 router.post("/token", validateToken, async (req: Request, res: Response) => {
   const user = (req as CustomRequest).user;

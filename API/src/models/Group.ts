@@ -3,5 +3,5 @@ export interface Group {
   name: string;
   groupCode: number;
   created_at: Date;
-  adminId: string;
+  userId: string;
 }

@@ -8,10 +8,6 @@ export class GroupService implements IGroupService {
     return await this.groupRepository.getAllGroups();
   }
 
-  async getAllGroups(): Promise<Group[]> {
-    return await this.groupRepository.getAllGroups();
-  }
-
   async createGroup(name: string, adminId: string): Promise<Group> {
     return await this.groupRepository.createGroup(name, adminId);
     

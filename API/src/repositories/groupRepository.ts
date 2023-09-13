@@ -14,11 +14,11 @@ export class GroupRepository implements IGroupRepository {
     }
   }
 
-  async getGroupByAdminId(idAdmin: string): Promise<Group | null> {
+  async getGroupByAdminId(userId: string): Promise<Group | null> {
     try {
       return await prisma.group.findUnique({
         where: {
-          adminId: idAdmin
+          userId: userId
         }
       })
     } catch (error) {
@@ -26,12 +26,12 @@ export class GroupRepository implements IGroupRepository {
     }
   }
 
-  async createGroup(name: string, adminId: string): Promise<Group> {
+  async createGroup(name: string, userId: string): Promise<Group> {
     try {
       return prisma.group.create({
         data: {
           name,
-          adminId: adminId,
+          userId: userId,
           created_at: new Date(),
         },
       });

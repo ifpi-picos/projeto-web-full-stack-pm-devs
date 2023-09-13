@@ -14,22 +14,11 @@ model User {
   email String @unique
   password String
   profile_image String
+  isAdmin Boolean
   created_at DateTime
   member Member?
-  posts Post[]
-}
-
-model Admin {
-  id String @id @default(uuid())
-  name String
-  username String
-  email String @unique
-  password String
-  phoneNumber String
-  profile_image String
-  created_at DateTime
-  isAdmin Boolean
   group Group?
+  posts Post[]
 }
 
 model Group {
@@ -37,8 +26,8 @@ model Group {
   name String
   groupCode Int @unique @default(autoincrement())
   created_at DateTime
-  adminId String @unique
-  admin Admin @relation(fields: [adminId], references: [id])
+  userId String @unique
+  user User @relation(fields: [userId], references: [id])
   murais Mural[]
   members Member[]
 }

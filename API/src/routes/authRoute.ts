@@ -6,7 +6,6 @@ import { User } from "../models/User";
 
 // Services and Repositories
 import { UserRepository } from "../repositories/userRepository";
-import { AdminRepository } from "../repositories/adminRepository";
 
 // Services
 import { AuthService } from "../services/authService";
@@ -28,8 +27,7 @@ router.post("/login", async (req: Request, res: Response) => {
     }
 
     const repositoryUser = await new UserRepository();
-    const repositoryAdmin = await new AdminRepository();
-    const { statusCode, body } = await new AuthService(repositoryUser, repositoryAdmin).login(
+    const { statusCode, body } = await new AuthService(repositoryUser).login(
       user.email,
       user.password
     );

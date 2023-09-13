@@ -5,20 +5,21 @@ import bcrypt from "bcrypt";
 
 // Interfaces
 import { HttpResponse } from "../interfaces/interfaces";
-import {
-  IUserRepository,
-  IUserService,
-} from "../interfaces/userInterface";
+import { IUserRepository, IUserService } from "../interfaces/userInterface";
+import { IGroupRepository } from "../interfaces/groupInterface";
 
 export const hashPass = async (password: string): Promise<string> => {
-  const salt = process.env.BCRYPT_SALT || '10';
+  const salt = process.env.BCRYPT_SALT || "10";
   const saltValue = await bcrypt.genSaltSync(parseInt(salt));
   const hash = await bcrypt.hashSync(password, saltValue);
   return hash;
-}
+};
 
 export class UserService implements IUserService {
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(
+    private readonly userRepository: IUserRepository,
+    private readonly groupRepository: IGroupRepository
+  ) {}
 
   async getAllUsers(): Promise<HttpResponse<User[]>> {
     try {
@@ -69,26 +70,39 @@ export class UserService implements IUserService {
   }
 
   async addUser(
-    user: User
+    data: User & { groupName: string }
   ): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>> {
     try {
-      const userExists = await this.userRepository.getUserByEmail(user.email);
-      if (userExists) return {
-        statusCode: 400,
-        body: "User already exists."
-      }
+      const userExists = await this.userRepository.getUserByEmail(data.email);
+      if (userExists)
+        return {
+          statusCode: 400,
+          body: "User already exists.",
+        };
 
       // Hash password
-      user.password = await hashPass(user.password);
-      user.username = user.username.toLowerCase();
+      data.password = await hashPass(data.password);
+      data.username = data.username.toLowerCase();
 
-      const newUser = await this.userRepository.addUser(user);
-
+      const newUser = await this.userRepository.addUser(data);
       if (!newUser)
         return {
           statusCode: 400,
           body: "User not created.",
         };
+
+      if (data.isAdmin) {
+        try {
+          await this.groupRepository.createGroup(data.groupName, newUser.id);
+        } catch (error) {
+          await this.userRepository.removeUser(newUser.id);
+
+          return {
+            statusCode: 500,
+            body: `Error: ${error}`,
+          };
+        }
+      }
 
       const { password, confirmPassword, ...userWithoutPass } = newUser;
       password;
@@ -105,35 +119,44 @@ export class UserService implements IUserService {
       };
     }
   }
-  
-  async updateUser(id: string, dataUser: User): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>> {
+
+  async updateUser(
+    id: string,
+    dataUser: User
+  ): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>> {
     try {
       const userExists = await this.userRepository.getUserById(id);
-      if(!userExists) return {
-        statusCode: 404,
-        body: "User not found.",
-      };
+      if (!userExists)
+        return {
+          statusCode: 404,
+          body: "User not found.",
+        };
 
-      const fields: (keyof { name: string, username: string, password: string, profile_image: string })[] = ["name", "username", "password", "profile_image"];
-      for(const field of fields) {
-        if(!dataUser[field]) {
+      const fields: (keyof Pick<
+        User,
+        "name" | "username" | "password" | "profile_image"
+      >)[] = ["name", "username", "password", "profile_image"];
+      for (const field of fields) {
+        if (!dataUser[field]) {
           dataUser[field] = userExists[field]!;
         }
       }
 
       const newUser = await this.userRepository.updateUser(id, dataUser);
-      if(!newUser) return {
-        statusCode: 400,
-        body: "User not updated."
-      }
+      if (!newUser)
+        return {
+          statusCode: 400,
+          body: "User not updated.",
+        };
 
       const { password, confirmPassword, ...newUserWithoutPassword } = newUser;
-      password; confirmPassword;
-      
+      password;
+      confirmPassword;
+
       return {
         statusCode: 200,
-        body: newUserWithoutPassword
-      }
+        body: newUserWithoutPassword,
+      };
     } catch (error) {
       return {
         statusCode: 500,
@@ -142,27 +165,30 @@ export class UserService implements IUserService {
     }
   }
 
-  async removeUser(id: string): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>>{
+  async removeUser(
+    id: string
+  ): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>> {
     try {
       const user = await this.userRepository.removeUser(id);
-      if(!user) return {
-        statusCode: 404,
-        body: "User not found."
-      }
+      if (!user)
+        return {
+          statusCode: 404,
+          body: "User not found.",
+        };
 
       const { password, confirmPassword, ...userWithoutPassword } = user;
-      password; confirmPassword;
+      password;
+      confirmPassword;
 
       return {
         statusCode: 200,
-        body: userWithoutPassword
-      }
+        body: userWithoutPassword,
+      };
     } catch (error) {
       return {
         statusCode: 500,
         body: `Error: ${error}`,
       };
     }
-    
   }
 }
