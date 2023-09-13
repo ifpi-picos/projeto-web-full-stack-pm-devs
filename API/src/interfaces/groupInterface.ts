@@ -1,12 +1,14 @@
 import { Group } from "../models/Group";
+import { HttpResponse } from "./interfaces";
 
 export interface IGroupRepository {
   getAllGroups: () => Promise<Group[]>;
-  getGroupByAdminId(userId: string): Promise<Group | null>
+  getGroupByUserId(userId: string): Promise<Group | null>
   createGroup: (name: string, userId: string) => Promise<Group>;
 }
 
 export interface IGroupService {
-  getAllGroups():  Promise<Group[]>;
-  createGroup(name: string, userId: string): Promise<Group>;
+  getAllGroups():  Promise<HttpResponse<Group[]>>;
+  getGroupByUserId(userId: string): Promise<HttpResponse<Group | null>>;
+  createGroup(name: string, userId: string): Promise<HttpResponse<Group>>;
 }

@@ -44,6 +44,11 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/groups/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+})
+
 router.post("/", async (req: Request, res: Response) => {
   try {
     const data = req.body;

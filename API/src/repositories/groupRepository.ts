@@ -14,7 +14,7 @@ export class GroupRepository implements IGroupRepository {
     }
   }
 
-  async getGroupByAdminId(userId: string): Promise<Group | null> {
+  async getGroupByUserId(userId: string): Promise<Group | null> {
     try {
       return await prisma.group.findUnique({
         where: {
