@@ -91,19 +91,6 @@ export class UserService implements IUserService {
           body: "User not created.",
         };
 
-      if (data.isAdmin) {
-        try {
-          await this.groupRepository.createGroup(data.groupName, newUser.id);
-        } catch (error) {
-          await this.userRepository.removeUser(newUser.id);
-
-          return {
-            statusCode: 500,
-            body: `Error: ${error}`,
-          };
-        }
-      }
-
       const { password, confirmPassword, ...userWithoutPass } = newUser;
       password;
       confirmPassword;

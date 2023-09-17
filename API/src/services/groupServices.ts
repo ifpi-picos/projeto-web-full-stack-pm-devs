@@ -1,9 +1,10 @@
 import { IGroupRepository, IGroupService } from "../interfaces/groupInterface";
 import { HttpResponse } from "../interfaces/interfaces";
+import { IUserRepository } from "../interfaces/userInterface";
 import { Group } from "../models/Group";
 
 export class GroupService implements IGroupService {
-  constructor(private groupRepository: IGroupRepository) {}
+  constructor(private readonly groupRepository: IGroupRepository, private readonly userRepository: IUserRepository) {}
 
   async getAllGroups(): Promise<HttpResponse<Group[]>> {
     try {
@@ -45,9 +46,14 @@ export class GroupService implements IGroupService {
     }
   }
 
-  async createGroup(name: string, adminId: string): Promise<HttpResponse<Group>> {
+  async createGroup(name: string, userId: string): Promise<HttpResponse<Group>> {
     try {
-      const group = await this.groupRepository.createGroup(name, adminId);
+      const user = await this.userRepository.getUserById(userId);
+      if(!user || !user.isAdmin) return {
+        statusCode: 400,
+        body: `User does not exist or does not have permission.`
+      }
+      const group = await this.groupRepository.createGroup(name, userId);
       if(!group) return {
         statusCode: 400,
         body: "Group not created.",
