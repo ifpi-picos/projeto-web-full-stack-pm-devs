@@ -13,21 +13,29 @@ export class MuralRepository implements IMuralRepository {
   }
 
   async getMuralsByGroupId(groupId: string): Promise<Mural[]> {
-    return await prisma.mural.findMany({
-      where: {
-        groupId
-      }
-    })
+    try {
+      return await prisma.mural.findMany({
+        where: {
+          groupId
+        }
+      })
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
   }
 
   async createMural({ name, category, groupId }: Mural): Promise<Mural> {
-    return await prisma.mural.create({
-      data: {
-        name,
-        category,
-        groupId,
-        created_at: new Date(),
-      },
-    });
+    try {
+      return await prisma.mural.create({
+        data: {
+          name,
+          category,
+          groupId,
+          created_at: new Date(),
+        },
+      });
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
   }
 }
