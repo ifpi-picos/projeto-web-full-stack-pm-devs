@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "npx nodemon"
+    "start:dev": "npx nodemon",
+    "build": "npx tsc"
   },
   "author": "",
   "license": "ISC",
@@ -21,9 +22,7 @@
     "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
     "prisma": "^5.2.0",
-    "ts-node": "^10.9.1",
-    "tsc": "^2.0.4",
-    "typescript": "^5.2.2"
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
     "@prisma/client": "^5.2.0",

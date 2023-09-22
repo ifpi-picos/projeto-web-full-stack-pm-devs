@@ -1,6 +1,18 @@
 import { Request, Response } from "express";
 import { Router } from "express";
 
+// tsoa
+// import {
+//   Body,
+//   Controller,
+//   Get,
+//   Path,
+//   Post,
+//   Query,
+//   Route,
+//   SuccessResponse,
+// } from "tsoa";
+
 // Models
 import { User } from "../models/User";
 
@@ -10,18 +22,15 @@ import { UserService } from "../services/userService";
 
 // Middleware
 import { CustomRequest, validateToken } from "../middlewares/validateToken";
-import { GroupRepository } from "../repositories/groupRepository";
 
 const router = Router();
 
 const repositoryUser = new UserRepository();
-const groupRepository = new GroupRepository();
 
 router.get("/", async (req: Request, res: Response) => {
   try {
     const { statusCode, body } = await new UserService(
-      repositoryUser,
-      groupRepository
+      repositoryUser
     ).getAllUsers();
 
     res.status(statusCode).json(body);
@@ -34,8 +43,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { statusCode, body } = await new UserService(
-      repositoryUser,
-      groupRepository
+      repositoryUser
     ).getUserById(id);
 
     res.status(statusCode).json(body);
@@ -44,10 +52,10 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/groups/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
+// router.get("/groups/:id", async (req: Request, res: Response) => {
+//   const { id } = req.params;
 
-})
+// })
 
 router.post("/", async (req: Request, res: Response) => {
   try {
@@ -82,8 +90,7 @@ router.post("/", async (req: Request, res: Response) => {
         .json("The password needs at least eight characters.");
 
     const { statusCode, body } = await new UserService(
-      repositoryUser,
-      groupRepository
+      repositoryUser
     ).addUser(data);
 
     res.status(statusCode).json(body);
@@ -96,8 +103,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const user = req.body;
   const { statusCode, body } = await new UserService(
-    repositoryUser,
-    groupRepository
+    repositoryUser
   ).updateUser(id, user);
 
   res.status(statusCode).json(body);
@@ -106,8 +112,7 @@ router.put("/:id", async (req: Request, res: Response) => {
 router.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const { statusCode, body } = await new UserService(
-    repositoryUser,
-    groupRepository
+    repositoryUser
   ).removeUser(id);
 
   res.status(statusCode).json(body);

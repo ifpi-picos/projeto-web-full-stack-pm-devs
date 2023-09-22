@@ -6,7 +6,6 @@ import bcrypt from "bcrypt";
 // Interfaces
 import { HttpResponse } from "../interfaces/interfaces";
 import { IUserRepository, IUserService } from "../interfaces/userInterface";
-import { IGroupRepository } from "../interfaces/groupInterface";
 
 export const hashPass = async (password: string): Promise<string> => {
   const salt = process.env.BCRYPT_SALT || "10";
@@ -17,8 +16,7 @@ export const hashPass = async (password: string): Promise<string> => {
 
 export class UserService implements IUserService {
   constructor(
-    private readonly userRepository: IUserRepository,
-    private readonly groupRepository: IGroupRepository
+    private readonly userRepository: IUserRepository
   ) {}
 
   async getAllUsers(): Promise<HttpResponse<User[]>> {
