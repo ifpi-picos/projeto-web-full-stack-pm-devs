@@ -42,6 +42,8 @@ npm run dev
 - [Typescript](https://www.typescriptlang.org/) - Linguagem de Programação.
 - [Node.js](https://nodejs.org/en) - Ambiente de execução de código Javascript do lado do servidor.
 - [Express](https://expressjs.com/pt-br/) - Framework para aplicativos web Node.js.
+-[Railway](https://railway.app/) - Servidor de hospedagem da API.
+- [Supabase](https://supabase.com/) - Servidor de hospedagem do banco de dados PostgreSQL.
 
 ## Autores
 - <b>Team Lider e Desenvolvedor Back-end</b> - [Flávio Eduardo](https://github.com/flavioedu-dev)
