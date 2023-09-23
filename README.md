@@ -10,12 +10,12 @@ O Mural Virtual é uma plataforma de compartilhamento de informações de forma 
 ## Instalação
 Baixar o projeto:
 ```
-git clone https://github.com/flavioedu-dev/virtual-wall.git
+git clone https://github.com/ifpi-picos/projeto-web-full-stack-pm-devs.git
 ```
 
-Abrir pasta do projeto:
+Dentro da pasta do projeto, acesse a pasta API:
 ```
-cd virtual-wall
+cd ./API
 ```
 
 Instalar as dependências:
@@ -25,24 +25,24 @@ npm install
 
 Executar o projeto:
 ```
-npm run dev 
+npm start:dev
 ```
 
+### Acesso:
+Para acessar a API: 
+<a>http://localhost:5001</a> (Verifique a porta *5001 ou 8000*)
+
+Para acessar a documentação:
+<a>http://localhost:5001/api-docs</a> (Verifique a porta *5001 ou 8000*)
+
+Para acessar a documentação na nuvem:
+<a>https://projeto-web-full-stack-pm-devs-production.up.railway.app/api-docs/</a>
+
 ## Tecnologias utilizadas
-
-### Front-end
-- [HTML](https://developer.mozilla.org/pt-BR/docs/Web/HTML) - Linguagem de Marcação de Hipertexto.
-- [CSS](https://developer.mozilla.org/pt-BR/docs/Web/CSS) - Linguagem de Estilização.
-- [Javascript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript) - Linguagem de programação.
-- [Typescript](https://www.typescriptlang.org/) - Linguagem de Programação.
-- [NextJS](https://nextjs.org/docs) - Framework React.
-
-### Back-end
-- [Javascript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript) - Linguagem de programação.
-- [Typescript](https://www.typescriptlang.org/) - Linguagem de Programação.
 - [Node.js](https://nodejs.org/en) - Ambiente de execução de código Javascript do lado do servidor.
 - [Express](https://expressjs.com/pt-br/) - Framework para aplicativos web Node.js.
--[Railway](https://railway.app/) - Servidor de hospedagem da API.
+- [Typescript](https://www.typescriptlang.org/) - Superset JavaScript.
+- [Railway](https://railway.app/) - Servidor de hospedagem da API.
 - [Supabase](https://supabase.com/) - Servidor de hospedagem do banco de dados PostgreSQL.
 
 ## Autores
