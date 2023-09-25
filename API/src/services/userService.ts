@@ -71,8 +71,9 @@ export class UserService implements IUserService {
     data: User & { groupName: string }
   ): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>> {
     try {
-      const userExists = await this.userRepository.getUserByEmail(data.email);
-      if (userExists)
+      const userExistsEmail = await this.userRepository.getUserByEmail(data.email);
+      const userExistsUsername = await this.userRepository.getUserByUsername(data.username);
+      if (userExistsEmail || userExistsUsername)
         return {
           statusCode: 400,
           body: "User already exists.",

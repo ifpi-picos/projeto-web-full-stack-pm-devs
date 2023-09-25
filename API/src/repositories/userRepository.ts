@@ -37,6 +37,18 @@ export class UserRepository implements IUserRepository {
     }
   }
 
+  async getUserByUsername(username: string): Promise<User | null> {
+    try {
+      return await prisma.user.findUnique({
+        where: {
+          username
+        },
+      });
+    } catch (error) {
+      throw new Error(`error: ${error}`);
+    }
+  }
+
   async addUser({
     name,
     username,
