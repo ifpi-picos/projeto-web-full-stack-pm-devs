@@ -63,8 +63,8 @@ export class MuralService implements IMuralService {
       }
 
       return {
-        statusCode: 200,
-        body: mural
+        statusCode: 201,
+        body: "Mural created successfully."
       }
     } catch (error) {
       return {

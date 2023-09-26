@@ -60,8 +60,8 @@ export class GroupService implements IGroupService {
       }
   
       return {
-        statusCode: 200,
-        body: group
+        statusCode: 201,
+        body: "Group created successfully.",
       }
     } catch (error) {
       return {
@@ -79,11 +79,11 @@ export class GroupService implements IGroupService {
         body: "Group not found."
       }
 
-      const groupUpdated = await this.groupRepository.updateGroup(name, userId);
+      await this.groupRepository.updateGroup(name, userId);
 
       return {
         statusCode: 200,
-        body: groupUpdated
+        body: "Group updated successfully."
       }
     } catch (error) {
       return {
@@ -101,11 +101,11 @@ export class GroupService implements IGroupService {
         body: "Group not found."
       }
 
-      const removedGroup = await this.groupRepository.removeGroup(userId);
+      await this.groupRepository.removeGroup(userId);
       
       return {
         statusCode: 200,
-        body: removedGroup
+        body: "Group removed successfully."
       }
     } catch (error) {
       return {

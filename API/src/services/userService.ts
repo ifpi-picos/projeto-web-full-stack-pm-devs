@@ -83,20 +83,11 @@ export class UserService implements IUserService {
       data.password = await hashPass(data.password);
       data.username = data.username.toLowerCase();
 
-      const newUser = await this.userRepository.addUser(data);
-      if (!newUser)
-        return {
-          statusCode: 400,
-          body: "User not created.",
-        };
-
-      const { password, confirmPassword, ...userWithoutPass } = newUser;
-      password;
-      confirmPassword;
+      await this.userRepository.addUser(data);
 
       return {
-        statusCode: 200,
-        body: userWithoutPass,
+        statusCode: 201,
+        body: "User created successfully.",
       };
     } catch (error) {
       return {
@@ -128,20 +119,11 @@ export class UserService implements IUserService {
         }
       }
 
-      const newUser = await this.userRepository.updateUser(id, dataUser);
-      if (!newUser)
-        return {
-          statusCode: 400,
-          body: "User not updated.",
-        };
-
-      const { password, confirmPassword, ...newUserWithoutPassword } = newUser;
-      password;
-      confirmPassword;
+      await this.userRepository.updateUser(id, dataUser);
 
       return {
         statusCode: 200,
-        body: newUserWithoutPassword,
+        body: "User updated successfully.",
       };
     } catch (error) {
       return {
@@ -162,13 +144,9 @@ export class UserService implements IUserService {
           body: "User not found.",
         };
 
-      const { password, confirmPassword, ...userWithoutPassword } = user;
-      password;
-      confirmPassword;
-
       return {
         statusCode: 200,
-        body: userWithoutPassword,
+        body: "User deleted successfully.",
       };
     } catch (error) {
       return {
