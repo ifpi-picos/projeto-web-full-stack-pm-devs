@@ -39,4 +39,31 @@ export class GroupRepository implements IGroupRepository {
       throw new Error(`error: ${error}`);
     }
   }
+
+  async updateGroup(name: string, userId: string): Promise<Group> {
+    try {
+      return prisma.group.update({
+        where: {
+          userId
+        },
+        data: {
+          name
+        }
+      })
+    } catch (error) {
+      throw new Error(`error: ${error}`);
+    }
+  }
+
+  async removeGroup(userId: string): Promise<Group> {
+    try {
+      return prisma.group.delete({
+        where: {
+          userId
+        }
+      })
+    } catch (error) {
+      throw new Error(`error: ${error}`);
+    }
+  }
 }

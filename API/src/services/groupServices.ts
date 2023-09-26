@@ -70,4 +70,48 @@ export class GroupService implements IGroupService {
       };
     }
   }
+
+  async updateGroup(name: string, userId: string): Promise<HttpResponse<Group>>{
+    try {
+      const userGroup = await this.groupRepository.getGroupByUserId(userId);
+      if(!userGroup) return {
+        statusCode: 404,
+        body: "Group not found."
+      }
+
+      const groupUpdated = await this.groupRepository.updateGroup(name, userId);
+
+      return {
+        statusCode: 200,
+        body: groupUpdated
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: `Error: ${error}`,
+      };
+    }
+  }
+
+  async removeGroup(userId: string): Promise<HttpResponse<Group>>{
+    try {
+      const userGroup = await this.groupRepository.getGroupByUserId(userId);
+      if(!userGroup) return {
+        statusCode: 404,
+        body: "Group not found."
+      }
+
+      const removedGroup = await this.groupRepository.removeGroup(userId);
+      
+      return {
+        statusCode: 200,
+        body: removedGroup
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: `Error: ${error}`,
+      };
+    }
+  }
 }
