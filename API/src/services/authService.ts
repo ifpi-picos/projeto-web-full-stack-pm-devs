@@ -7,13 +7,13 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const compareHash = async (password: string, hash: string): Promise<boolean> => {
-  return await bcrypt.compareSync(password, hash)
+  return bcrypt.compareSync(password, hash)
 }
 
-export const generateToken = (user: Omit<User, "password">): string => {
+export const generateToken = (id: string): string => {
   const SECRET = process.env.JWT_SECRET_KEY || "SECRET";
   const token = jwt.sign({
-    data: user,
+    id: id,
   }, SECRET, { expiresIn: "1h" });
 
   return token;
@@ -23,7 +23,8 @@ export const generateToken = (user: Omit<User, "password">): string => {
 export class AuthService implements IAuthService {
   constructor(private readonly userRepository: IUserRepository) {}
 
-  async login(email: string, password: string): Promise<HttpResponse<string>> {
+  async login(email: string, password: string):
+   Promise<HttpResponse<Omit<User, "password">>> {
     try {
       const user = await this.userRepository.getUserByEmail(email);
 
@@ -41,11 +42,12 @@ export class AuthService implements IAuthService {
 
       const { password: currentPass, ...currentWithoutPassword } = current!;
       currentPass;
-      const token = generateToken(currentWithoutPassword)
+      const token = generateToken(user.id)
 
       return {
         statusCode: 200,
-        body: token
+        body: currentWithoutPassword,
+        cookies: token
       }
       
     } catch (error) {

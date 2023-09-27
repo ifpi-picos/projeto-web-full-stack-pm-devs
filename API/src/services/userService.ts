@@ -68,7 +68,7 @@ export class UserService implements IUserService {
   }
 
   async addUser(
-    data: User & { groupName: string }
+    data: User
   ): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>> {
     try {
       const userExistsEmail = await this.userRepository.getUserByEmail(data.email);

@@ -2,21 +2,28 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 export interface CustomRequest extends Request {
-  user: jwt.JwtPayload | string;
+  userId: jwt.JwtPayload | string;
 }
 
-export const validateToken = async (req: Request, res: Response, next: NextFunction) => {
+export const validateToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const token = req.headers.authorization?.replace('Bearer ', '');
-    if(!token) throw new Error(); 
+    const token = req.cookies ? req.cookies.token : null;
+    if (!token) {
+      res.status(403).send({
+        auth: false, message: 'No token provided.'
+      })
+    }
 
     const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "SECRET";
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
-    (req as CustomRequest).user = decoded;
+    (req as CustomRequest).userId = decoded;
 
     next();
   } catch (error) {
-    console.log(error);
-    res.status(401).send('Please authenticate.');
+    res.status(401).send("Token not valid.");
   }
 };

@@ -1,18 +1,6 @@
 import { Request, Response } from "express";
 import { Router } from "express";
 
-// tsoa
-// import {
-//   Body,
-//   Controller,
-//   Get,
-//   Path,
-//   Post,
-//   Query,
-//   Route,
-//   SuccessResponse,
-// } from "tsoa";
-
 // Models
 import { User } from "../models/User";
 
@@ -114,8 +102,8 @@ router.delete("/:id", async (req: Request, res: Response) => {
 });
 
 router.post("/token", validateToken, async (req: Request, res: Response) => {
-  const user = (req as CustomRequest).user;
-  res.send(user);
+  const userId = (req as CustomRequest).userId;
+  res.send(userId);
 });
 
 export default router;

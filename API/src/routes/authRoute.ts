@@ -27,12 +27,13 @@ router.post("/login", async (req: Request, res: Response) => {
     }
 
     const repositoryUser = await new UserRepository();
-    const { statusCode, body } = await new AuthService(repositoryUser).login(
+    const { statusCode, body, cookies } = await new AuthService(repositoryUser).login(
       user.email,
       user.password
     );
-
-    res.status(statusCode).json(body);
+    
+    res.cookie("token", cookies, { maxAge: 3600000, httpOnly: true });
+    res.status(statusCode).json({ auth: statusCode === 200 ? true : false, data: body });
   } catch (error) {
     res.status(500).json({ error: error });
   }
