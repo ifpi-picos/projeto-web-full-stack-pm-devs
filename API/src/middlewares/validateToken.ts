@@ -13,7 +13,7 @@ export const validateToken = async (
   try {
     const token = req.cookies ? req.cookies.token : null;
     if (!token) {
-      res.status(403).send({
+      return res.status(403).send({
         auth: false, message: 'No token provided.'
       })
     }

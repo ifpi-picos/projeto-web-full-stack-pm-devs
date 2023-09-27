@@ -137,12 +137,14 @@ export class UserService implements IUserService {
     id: string
   ): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>> {
     try {
-      const user = await this.userRepository.removeUser(id);
-      if (!user)
+
+      const userExists = await this.userRepository.getUserById(id);
+      if (!userExists)
         return {
           statusCode: 404,
           body: "User not found.",
         };
+      await this.userRepository.removeUser(id);
 
       return {
         statusCode: 200,

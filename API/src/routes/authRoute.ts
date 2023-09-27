@@ -9,8 +9,11 @@ import { UserRepository } from "../repositories/userRepository";
 
 // Services
 import { AuthService } from "../services/authService";
+import { UserService } from "../services/userService";
 
 const router = Router();
+
+const repositoryUser = new UserRepository();
 
 router.post("/login", async (req: Request, res: Response) => {
   try {
@@ -38,6 +41,41 @@ router.post("/login", async (req: Request, res: Response) => {
     res.status(500).json({ error: error });
   }
 });
+
+router.post("/register", async (req: Request, res: Response) => {
+  try {
+    const data: User = req.body;
+
+    const requiredFields: (keyof User)[] = [
+      "name",
+      "username",
+      "email",
+      "password",
+      "confirmPassword",
+      "isAdmin",
+    ];
+    for (const field of requiredFields) {
+      if (data[field] === null || data[field] === undefined || data[field]?.toString().trim() === "") {
+        return res.status(400).json(`The field ${field} is required.`);
+      }
+    }
+
+    if (data.password !== data.confirmPassword)
+      return res.status(400).json("Passwords do not match.");
+    if (data.password.length < 8)
+      return res
+        .status(400)
+        .json("The password needs at least eight characters.");
+
+    const { statusCode, body } = await new UserService(
+      repositoryUser
+    ).addUser(data);
+
+    res.status(statusCode).json(body);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+})
 
 
 export default router;

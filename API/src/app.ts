@@ -21,12 +21,12 @@ app.all("/*", (req, res, next) => {
   const publics = publicRoutes?.split(",")
   if(publics) {
     for(let i = 0; i < publics.length; i++) {
-      if(req.path == publics[i]){
+      if(req.path === publics[i]){
         return next()
       }
     }
   }
-  validateToken(req, res, next)
+  return validateToken(req, res, next)
 });
 
 app.use("/", Router);
