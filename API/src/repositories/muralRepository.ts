@@ -12,7 +12,7 @@ export class MuralRepository implements IMuralRepository {
     }
   }
 
-  async getMuralById(muralId: string): Promise<Mural | null> {
+  async getMuralById(muralId: number): Promise<Mural | null> {
     try {
       return await prisma.mural.findUnique({
         where: {
@@ -51,7 +51,7 @@ export class MuralRepository implements IMuralRepository {
     }
   }
 
-  async updateMural({ name, category }: Mural, id: string): Promise<Mural> {
+  async updateMural({ name, category }: Mural, id: number): Promise<Mural> {
     try {
       return await prisma.mural.update({
         where: {
@@ -67,7 +67,7 @@ export class MuralRepository implements IMuralRepository {
     }
   }
 
-  async removeMural(muralId: string): Promise<Mural> {
+  async removeMural(muralId: number): Promise<Mural> {
     try {
       return await prisma.mural.delete({
         where: {

@@ -20,6 +20,17 @@ router.get("/:id", async (req: Request, res: Response) => {
   res.status(statusCode).json(body);
 })
 
+router.get("/generatecode/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { groupId }: { groupId: string } = req.body;
+
+  if(!id || !id.trim()) return res.status(400).json("Param MuralId is required.")
+  if(!groupId || !groupId.trim()) return res.status(400).json("GroupId is required.")
+
+  const { statusCode, body } = await new MuralService(repositoryMural, repositoryGroup).generateCode(groupId, Number(id));
+  res.status(statusCode).json(body);
+})
+
 router.post("/", async (req: Request, res: Response) => {
   const data: Pick<Mural, "name" | "category" | "groupId"> = req.body;
 
@@ -37,13 +48,13 @@ router.post("/", async (req: Request, res: Response) => {
 router.put("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const data = req.body;
-  const { statusCode, body } = await new MuralService(repositoryMural, repositoryGroup).updateMural(data, id);
+  const { statusCode, body } = await new MuralService(repositoryMural, repositoryGroup).updateMural(data, Number(id));
   res.status(statusCode).json(body);
 })
 
 router.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { statusCode, body } = await new MuralService(repositoryMural, repositoryGroup).removeMural(id);
+  const { statusCode, body } = await new MuralService(repositoryMural, repositoryGroup).removeMural(Number(id));
   res.status(statusCode).json(body);
 })
 

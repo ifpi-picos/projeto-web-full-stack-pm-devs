@@ -83,7 +83,7 @@ export class MuralService implements IMuralService {
     }
   }
 
-  async updateMural(data: Mural, id: string): Promise<HttpResponse<Mural>> {
+  async updateMural(data: Mural, id: number): Promise<HttpResponse<Mural>> {
     try {
       const existsMural = await this.muralRepository.getMuralById(id);
       if (!existsMural) return {
@@ -125,7 +125,7 @@ export class MuralService implements IMuralService {
     }
   }
 
-  async removeMural(id: string): Promise<HttpResponse<Mural>>{
+  async removeMural(id: number): Promise<HttpResponse<Mural>>{
     try {
       const existsMural = await this.muralRepository.getMuralById(id);
       if (!existsMural) return {
@@ -138,6 +138,33 @@ export class MuralService implements IMuralService {
       return {
         statusCode: 200,
         body: "Mural deleted successfully."
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: `Error: ${error}`
+      }
+    }
+  }
+
+  async generateCode(groupId: string, muralId: number): Promise<HttpResponse<string>>{
+    try {
+      const groupExists = await this.groupRepository.getGroupById(groupId);
+      if(!groupExists) return {
+        statusCode: 404,
+        body: "Group not found."
+      }
+      const muralExists = await this.muralRepository.getMuralById(muralId);
+      if(!muralExists) return {
+        statusCode: 404,
+        body: "Mural not found."
+      }
+
+      const code = `${groupId}` + "!" + `${muralId}`;
+
+      return {
+        statusCode: 200,
+        body: code
       }
     } catch (error) {
       return {

@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { Group } from '../models/Group';
-import { GroupService } from '../services/groupServices';
+import { GroupService } from '../services/groupService';
 import { GroupRepository } from '../repositories/groupRepository';
 import { UserRepository } from '../repositories/userRepository';
 
