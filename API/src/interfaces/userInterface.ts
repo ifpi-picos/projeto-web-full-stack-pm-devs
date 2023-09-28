@@ -14,7 +14,7 @@ export interface IUserRepository {
 export interface IUserService {
   getAllUsers(): Promise<HttpResponse<User[]>>;
   getUserById(id: string): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>>;
-  addUser(data: User & { groupName: string }): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>>;
+  addUser(data: User): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>>;
   updateUser(id: string, dataUser: User): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>>;
   removeUser(id: string): Promise<HttpResponse<Omit<User, "password" | "confirmPassword">>>;
 }

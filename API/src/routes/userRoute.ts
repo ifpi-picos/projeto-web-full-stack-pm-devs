@@ -53,13 +53,6 @@ router.post("/", async (req: Request, res: Response) => {
       "isAdmin",
     ];
     for (const field of requiredFields) {
-      const namedGroup: (keyof {groupName: string}) = "groupName"
-
-      if(data["isAdmin"] && !data[namedGroup]) {
-        return res.status(400).json(`The field groupName is required.`);
-      }
-
-
       if (data[field] === null || data[field] === undefined || data[field]?.toString().trim() === "") {
         return res.status(400).json(`The field ${field} is required.`);
       }

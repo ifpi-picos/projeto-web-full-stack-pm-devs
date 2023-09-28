@@ -26,12 +26,32 @@ export class GroupService implements IGroupService {
     }
   }
 
+  async getGroupById(groupId: string): Promise<HttpResponse<Group | null>> {
+    try {
+      const group = await this.groupRepository.getGroupById(groupId);
+      if(!group) return {
+        statusCode: 404,
+        body: "Group not found."
+      }
+  
+      return {
+        statusCode: 200,
+        body: group
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: `Error: ${error}`,
+      };
+    }
+  }
+
   async getGroupByUserId(userId: string): Promise<HttpResponse<Group | null>> {
     try {
       const group = await this.groupRepository.getGroupByUserId(userId);
       if(!group) return {
-        statusCode: 400,
-        body: "Group not found"
+        statusCode: 404,
+        body: "Group not found."
       }
   
       return {
