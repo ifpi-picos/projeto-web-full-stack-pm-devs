@@ -57,8 +57,8 @@ model Post {
   content String
   media String[]
   created_at DateTime
-  userId String
-  user User @relation(fields: [userId], references: [id])
+  memberId String
+  member User @relation(fields: [memberId], references: [id])
   muralId Int
   mural Mural @relation(fields: [muralId], references: [id])
 }
