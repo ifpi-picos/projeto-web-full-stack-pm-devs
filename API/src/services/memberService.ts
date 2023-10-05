@@ -3,11 +3,21 @@ import { HttpResponse } from "../interfaces/interfaces";
 import { IMemberRepository, IMemberService } from "../interfaces/memberInterface";
 import { IGroupRepository } from "../interfaces/groupInterface";
 import { IMuralRepository } from "../interfaces/muralInterface";
+import { GroupService } from "./groupService";
+import { MuralService } from "./muralService";
+import { GroupRepository } from "../repositories/groupRepository";
+import { MuralRepository } from "../repositories/muralRepository";
 
 
 
 export class MemberService implements IMemberService {
-  constructor(private readonly memberRepository: IMemberRepository, private readonly groupRepository: IGroupRepository, private readonly muralRepository: IMuralRepository) {}
+  private _groupRepository: IGroupRepository;
+  private _muralRepository: IMuralRepository;
+
+  constructor(private readonly memberRepository: IMemberRepository) {
+    this._groupRepository = new GroupRepository();
+    this._muralRepository = new MuralRepository();
+  }
 
   async getAllMembers(): Promise<HttpResponse<Member[]>> {
     try {
@@ -33,19 +43,32 @@ export class MemberService implements IMemberService {
     try {
       const [groupId, muralId] = code.split("!")
 
-      const existGroup = await this.groupRepository.getGroupById(groupId);
+      const { statusCode, body: existGroup } = await new GroupService(this._groupRepository).getGroupById(groupId);
+
+      if(statusCode !== 200) return {
+        statusCode: statusCode,
+        body: "Invalid code."
+      }
+
       if(!existGroup) return {
         statusCode: 400,
         body: "Invalid code."
       }
 
+      const { statusCode: status, body: muralsGroup } = await new MuralService(this._muralRepository).getMuralsByGroupId(groupId);
+      
+      if(status !== 200 || typeof(muralsGroup) === "string") return {
+        statusCode: statusCode,
+        body: `${muralsGroup}`
+      }
+      
       let category = "";
-      const muralsGroup = await this.muralRepository.getMuralsByGroupId(groupId);
       for(let i = 0; i < muralsGroup.length + 1; i++) {
         if(muralsGroup[i].id === Number(muralId)){
           category = muralsGroup[i].category;
           break;
         }
+
         if(i === muralsGroup.length) {
           return {
             statusCode: 404,

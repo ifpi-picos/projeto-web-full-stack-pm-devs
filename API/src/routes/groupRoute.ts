@@ -2,21 +2,25 @@ import { Request, Response, Router } from 'express';
 import { Group } from '../models/Group';
 import { GroupService } from '../services/groupService';
 import { GroupRepository } from '../repositories/groupRepository';
-import { UserRepository } from '../repositories/userRepository';
 
 const router = Router();
 
 const repositoryGroup = new GroupRepository();
-const repositoryUser = new UserRepository();
 
 router.get("/", async (req: Request, res: Response) => {
-  const { statusCode, body } = await new GroupService(repositoryGroup, repositoryUser).getAllGroups();
+  const { statusCode, body } = await new GroupService(repositoryGroup).getAllGroups();
+  res.status(statusCode).json(body);
+})
+
+router.get("/:id/murals", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { statusCode, body } = await new GroupService(repositoryGroup).getGroupMurals(id);
   res.status(statusCode).json(body);
 })
 
 router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { statusCode, body } = await new GroupService(repositoryGroup, repositoryUser).getGroupByUserId(id);
+  const { statusCode, body } = await new GroupService(repositoryGroup).getGroupByUserId(id);
   res.status(statusCode).json(body);
 })
 
@@ -31,7 +35,7 @@ router.post("/", async (req: Request, res: Response) => {
     }
   }
 
-  const { statusCode, body } = await new GroupService(repositoryGroup, repositoryUser).createGroup(group.name, group.userId);
+  const { statusCode, body } = await new GroupService(repositoryGroup).createGroup(group.name, group.userId);
   res.status(statusCode).json(body);
 })
 
@@ -48,14 +52,14 @@ router.put("/:id", async (req: Request, res: Response) => {
     }
   }
 
-  const { statusCode, body } = await new GroupService(repositoryGroup, repositoryUser).updateGroup(group.name, id);
+  const { statusCode, body } = await new GroupService(repositoryGroup).updateGroup(group.name, id);
   res.status(statusCode).json(body);
 })
 
 router.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   
-  const { statusCode, body } = await new GroupService(repositoryGroup, repositoryUser).removeGroup(id);
+  const { statusCode, body } = await new GroupService(repositoryGroup).removeGroup(id);
   res.status(statusCode).json(body);
 })
 

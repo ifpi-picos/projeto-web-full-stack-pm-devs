@@ -1,11 +1,19 @@
 import { Mural } from "@prisma/client";
 import { HttpResponse } from "../interfaces/interfaces";
+
 import { IMuralRepository, IMuralService } from "../interfaces/muralInterface";
 import { IGroupRepository } from "../interfaces/groupInterface";
 
+import { GroupRepository } from "../repositories/groupRepository";
+
+import { GroupService } from "./groupService";
+
 
 export class MuralService implements IMuralService {
-  constructor(private readonly muralRepository: IMuralRepository, private readonly groupRepository: IGroupRepository) {}
+  private _groupRepository: IGroupRepository;
+  constructor(private readonly muralRepository: IMuralRepository) {
+    this._groupRepository = new GroupRepository();
+  }
 
   async getAllMurals(): Promise<HttpResponse<Mural[]>>{
     try {
@@ -49,7 +57,7 @@ export class MuralService implements IMuralService {
   
   async createMural(data: Pick<Mural, "name" | "category" | "groupId">): Promise<HttpResponse<Mural>> {
     try {
-      const groupExists = await this.groupRepository.getGroupById(data.groupId);
+      const groupExists = await new GroupService(this._groupRepository).getGroupById(data.groupId);
       if(!groupExists) return {
         statusCode: 404,
         body: "Group not found."
@@ -133,7 +141,8 @@ export class MuralService implements IMuralService {
           body: "Mural not found."
       }
 
-      await this.muralRepository.removeMural(id);
+      const res = await this.muralRepository.removeMural(id);
+      console.log(res);
 
       return {
         statusCode: 200,
@@ -149,11 +158,13 @@ export class MuralService implements IMuralService {
 
   async generateCode(groupId: string, muralId: number): Promise<HttpResponse<string>>{
     try {
-      const groupExists = await this.groupRepository.getGroupById(groupId);
-      if(!groupExists) return {
-        statusCode: 404,
-        body: "Group not found."
+      const { statusCode, body: groupExists } = await new GroupService(this._groupRepository).getGroupById(groupId);
+
+      if(statusCode !== 200 && typeof(groupExists) === "string") return {
+        statusCode: statusCode,
+        body: groupExists
       }
+
       const muralExists = await this.muralRepository.getMuralById(muralId);
       if(!muralExists) return {
         statusCode: 404,
