@@ -107,7 +107,7 @@ export class GroupService implements IGroupService {
     }
   }
 
-  async createGroup(name: string, userId: string): Promise<HttpResponse<Group>> {
+  async createGroup(name: string, userId: string, imgGroup: string): Promise<HttpResponse<Group>> {
     try {
       const { statusCode, body: user } = await new UserService(this._userRepository).getUserById(userId);
 
@@ -126,7 +126,7 @@ export class GroupService implements IGroupService {
         statusCode: 400,
         body: `User does not exist or does not have permission.`
       }
-      const group = await this.groupRepository.createGroup(name, userId);
+      const group = await this.groupRepository.createGroup(name, userId, imgGroup);
       if(!group) return {
         statusCode: 400,
         body: "Group not created.",
@@ -144,7 +144,7 @@ export class GroupService implements IGroupService {
     }
   }
 
-  async updateGroup(name: string, userId: string): Promise<HttpResponse<Group>>{
+  async updateGroup(name: string, userId: string, imgGroup: string): Promise<HttpResponse<Group>>{
     try {
       const userGroup = await this.groupRepository.getGroupByUserId(userId);
       if(!userGroup) return {
@@ -152,7 +152,7 @@ export class GroupService implements IGroupService {
         body: "Group not found."
       }
 
-      await this.groupRepository.updateGroup(name, userId);
+      await this.groupRepository.updateGroup(name, userId, imgGroup);
 
       return {
         statusCode: 200,

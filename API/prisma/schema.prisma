@@ -8,57 +8,59 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-  name String
-  username String @unique
-  email String @unique
-  password String
+  id            String   @id @default(uuid())
+  name          String
+  username      String   @unique
+  email         String   @unique
+  password      String
   profile_image String
-  isAdmin Boolean
-  created_at DateTime
-  member Member?
-  group Group?
-  posts Post[]
+  created_at    DateTime
+  isAdmin       Boolean
+  group         Group?
+  member        Member?
+  posts         Post[]
 }
 
 model Group {
-  id String @id @default(uuid())
-  name String
-  groupCode Int @unique @default(autoincrement())
+  id         String   @id @default(uuid())
+  name       String
   created_at DateTime
-  userId String @unique
-  user User @relation(fields: [userId], references: [id])
-  murais Mural[]
-  members Member[]
+  imgGroup   String
+  groupCode  Int      @unique @default(autoincrement())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id])
+  members    Member[]
+  murais     Mural[]
 }
 
 model Mural {
-  id Int @id @default(autoincrement())
-  name String
-  category String
+  name       String
+  category   String
   created_at DateTime
-  groupId String
-  group Group @relation(fields: [groupId], references: [id])
-  posts Post[]
+  imgMural   String
+  groupId    String
+  id         Int      @id @default(autoincrement())
+  group      Group    @relation(fields: [groupId], references: [id])
+  posts      Post[]
 }
 
 model Member {
-  id String @id @default(uuid())
-  category String
+  id         String   @id @default(uuid())
+  category   String
   created_at DateTime
-  userId String @unique
-  user User @relation(fields: [userId], references: [id])
-  groupId String
-  group Group @relation(fields: [groupId], references: [id])
+  userId     String   @unique
+  groupId    String
+  group      Group    @relation(fields: [groupId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model Post {
-  id String @id @default(uuid())
-  content String
-  media String[]
+  id         String   @id @default(uuid())
+  content    String
+  media      String[]
   created_at DateTime
-  memberId String
-  member User @relation(fields: [memberId], references: [id])
-  muralId Int
-  mural Mural @relation(fields: [muralId], references: [id])
+  muralId    Int
+  memberId   String
+  member     User     @relation(fields: [memberId], references: [id])
+  mural      Mural    @relation(fields: [muralId], references: [id])
 }

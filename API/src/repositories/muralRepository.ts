@@ -36,12 +36,13 @@ export class MuralRepository implements IMuralRepository {
     }
   }
 
-  async createMural({ name, category, groupId }: Pick<Mural, "name" | "category" | "groupId">): Promise<Mural> {
+  async createMural({ name, category, groupId, imgMural }: Pick<Mural, "name" | "category" | "groupId" | "imgMural">): Promise<Mural> {
     try {
       return await prisma.mural.create({
         data: {
           name,
           category: category,
+          imgMural,
           groupId,
           created_at: new Date(),
         },
@@ -51,7 +52,7 @@ export class MuralRepository implements IMuralRepository {
     }
   }
 
-  async updateMural({ name, category }: Mural, id: number): Promise<Mural> {
+  async updateMural({ name, category, imgMural }: Mural, id: number): Promise<Mural> {
     try {
       return await prisma.mural.update({
         where: {
@@ -59,7 +60,8 @@ export class MuralRepository implements IMuralRepository {
         },
         data: {
           name,
-          category: category
+          category: category,
+          imgMural
         }
       })
     } catch (error) {

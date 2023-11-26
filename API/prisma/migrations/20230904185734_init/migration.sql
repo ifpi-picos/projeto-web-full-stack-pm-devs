@@ -27,6 +27,7 @@ CREATE TABLE "Admin" (
 CREATE TABLE "Group" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "imgGroup" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL,
     "adminId" TEXT NOT NULL,
 
@@ -38,6 +39,7 @@ CREATE TABLE "Mural" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "category" TEXT NOT NULL,
+    "imgMural" TEXT NOT NULL
     "created_at" TIMESTAMP(3) NOT NULL,
     "groupId" TEXT NOT NULL,
 

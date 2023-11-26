@@ -38,13 +38,14 @@ export class GroupRepository implements IGroupRepository {
     }
   }
 
-  async createGroup(name: string, userId: string): Promise<Group> {
+  async createGroup(name: string, userId: string, imgGroup: string): Promise<Group> {
     try {
       return prisma.group.create({
         data: {
           name,
-          userId: userId,
+          userId,
           created_at: new Date(),
+          imgGroup,
         },
       });
     } catch (error) {
@@ -52,14 +53,15 @@ export class GroupRepository implements IGroupRepository {
     }
   }
 
-  async updateGroup(name: string, userId: string): Promise<Group> {
+  async updateGroup(name: string, userId: string, imgGroup: string): Promise<Group> {
     try {
       return prisma.group.update({
         where: {
           userId
         },
         data: {
-          name
+          name,
+          imgGroup
         }
       })
     } catch (error) {

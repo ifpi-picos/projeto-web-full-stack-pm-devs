@@ -55,7 +55,7 @@ export class MuralService implements IMuralService {
     }
   }
   
-  async createMural(data: Pick<Mural, "name" | "category" | "groupId">): Promise<HttpResponse<Mural>> {
+  async createMural(data: Pick<Mural, "name" | "category" | "groupId" | "imgMural">): Promise<HttpResponse<Mural>> {
     try {
       const groupExists = await new GroupService(this._groupRepository).getGroupById(data.groupId);
       if(!groupExists) return {

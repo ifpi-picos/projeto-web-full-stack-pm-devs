@@ -27,7 +27,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 router.post("/", async (req: Request, res: Response) => {
   const group = req.body;
 
-  const requiredProps: (keyof Group)[] = ["name", "userId"];
+  const requiredProps: (keyof Group)[] = ["name", "userId", "imgGroup"];
 
   for(const prop of requiredProps) {
     if(!group[prop] || !group[prop].trim()){
@@ -35,7 +35,7 @@ router.post("/", async (req: Request, res: Response) => {
     }
   }
 
-  const { statusCode, body } = await new GroupService(repositoryGroup).createGroup(group.name, group.userId);
+  const { statusCode, body } = await new GroupService(repositoryGroup).createGroup(group.name, group.userId, group.imgGroup);
   res.status(statusCode).json(body);
 })
 
@@ -52,7 +52,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     }
   }
 
-  const { statusCode, body } = await new GroupService(repositoryGroup).updateGroup(group.name, id);
+  const { statusCode, body } = await new GroupService(repositoryGroup).updateGroup(group.name,group.imgGroup, id);
   res.status(statusCode).json(body);
 })
 

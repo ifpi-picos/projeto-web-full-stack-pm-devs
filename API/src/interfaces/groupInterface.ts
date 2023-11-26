@@ -6,8 +6,8 @@ export interface IGroupRepository {
   getAllGroups: () => Promise<Group[]>;
   getGroupById: (groupId: string) => Promise<Group | null>;
   getGroupByUserId(userId: string): Promise<Group | null>;
-  createGroup: (name: string, userId: string) => Promise<Group>;
-  updateGroup: (name: string, userId: string) => Promise<Group>;
+  createGroup: (name: string, userId: string, imgGroup: string) => Promise<Group>;
+  updateGroup: (name: string, userId: string, imgGroup: string) => Promise<Group>;
   removeGroup: (userId: string) => Promise<Group>;
 }
 
@@ -16,7 +16,7 @@ export interface IGroupService {
   getGroupById: (groupId: string) => Promise<HttpResponse<Group | null>>;
   getGroupByUserId(userId: string): Promise<HttpResponse<Group | null>>;
   getGroupMurals(userId: string): Promise<HttpResponse<Mural[] | null>>;
-  createGroup(name: string, userId: string): Promise<HttpResponse<Group>>;
-  updateGroup: (name: string, userId: string) => Promise<HttpResponse<Group>>;
+  createGroup(name: string, userId: string, imgGroup: string): Promise<HttpResponse<Group>>;
+  updateGroup: (name: string, userId: string, imgGroup: string) => Promise<HttpResponse<Group>>;
   removeGroup: (userId: string) => Promise<HttpResponse<Group>>;
 }
