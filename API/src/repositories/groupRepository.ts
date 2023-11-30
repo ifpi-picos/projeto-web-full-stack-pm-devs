@@ -43,7 +43,7 @@ export class GroupRepository implements IGroupRepository {
       return prisma.group.create({
         data: {
           name,
-          userId,
+          userId: userId,
           created_at: new Date(),
           imgGroup,
         },

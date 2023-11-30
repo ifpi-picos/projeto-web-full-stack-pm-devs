@@ -77,8 +77,8 @@ export class MemberService implements IMemberService {
         }
       }
 
-      const userMemberAlreadyExists = await this.memberRepository.getMemberByUserId(userId);
-      if(userMemberAlreadyExists) return {
+      const userGroupAlreadyExist = await this.memberRepository.getMemberByUserId(groupId)
+      if(userGroupAlreadyExist) return {
         statusCode: 400,
         body: "Member already exists."
       }
