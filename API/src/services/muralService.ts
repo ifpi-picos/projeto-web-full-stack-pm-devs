@@ -63,9 +63,9 @@ export class MuralService implements IMuralService {
         body: "Group not found."
       }
 
-      const murals = await this.muralRepository.getAllMurals();
+      const murals = await this.muralRepository.getMuralsByGroupId(data.groupId);
       for(const unit of murals) {
-        if(unit.category === data.category.toLowerCase()) return {
+        if(unit.category === data.category.toLocaleLowerCase()) return {
           statusCode: 400,
           body: "Category already registered."
         }
@@ -99,9 +99,9 @@ export class MuralService implements IMuralService {
           body: "Mural not found."
       }
 
-      const murals = await this.muralRepository.getAllMurals();
+      const murals = await this.muralRepository.getMuralsByGroupId(data.groupId);
       for(const unit of murals) {
-        if(unit.category === data.category.toLowerCase()) return {
+        if(unit.category === data.category.toLocaleLowerCase()) return {
           statusCode: 400,
           body: "Category already registered."
         }

@@ -1,5 +1,6 @@
 import { Mural } from "@prisma/client"
 import { HttpResponse } from "./interfaces";
+import { promises } from "dns";
 
 export interface IMuralRepository {
   getAllMurals: () => Promise<Mural[]>;
