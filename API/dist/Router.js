@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const router = (0, express_1.Router)();
+const userRoute_1 = __importDefault(require("./routes/userRoute"));
+const authRoute_1 = __importDefault(require("./routes/authRoute"));
+const groupRoute_1 = __importDefault(require("./routes/groupRoute"));
+const muralRoute_1 = __importDefault(require("./routes/muralRoute"));
+const memberRoute_1 = __importDefault(require("./routes/memberRoute"));
+const postsRoute_1 = __importDefault(require("./routes/postsRoute"));
+router.use("/users", userRoute_1.default);
+router.use("/auth", authRoute_1.default);
+router.use("/groups", groupRoute_1.default);
+router.use("/murals", muralRoute_1.default);
+router.use("/members", memberRoute_1.default);
+router.use("/posts", postsRoute_1.default);
+exports.default = router;

@@ -27,7 +27,7 @@ export class MemberRepository implements IMemberRepository {
 
   async getMemberByUserId(userId: string): Promise<Member | null> {
     try {
-      return await prisma.member.findUnique({
+      return await prisma.member.findFirst({
         where: {
           userId
         }
