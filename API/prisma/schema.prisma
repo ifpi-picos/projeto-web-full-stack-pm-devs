@@ -17,7 +17,7 @@ model User {
   created_at    DateTime
   isAdmin       Boolean
   group         Group?
-  member        Member?
+  member        Member[]
   posts         Post[]
 }
 
