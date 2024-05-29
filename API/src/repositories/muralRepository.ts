@@ -52,7 +52,7 @@ export class MuralRepository implements IMuralRepository {
     }
   }
 
-  async updateMural({ name, category, imgMural }: Mural, id: number): Promise<Mural> {
+  async updateMural({ name, imgMural }: Mural, id: number): Promise<Mural> {
     try {
       return await prisma.mural.update({
         where: {
@@ -60,7 +60,6 @@ export class MuralRepository implements IMuralRepository {
         },
         data: {
           name,
-          category: category,
           imgMural
         }
       })

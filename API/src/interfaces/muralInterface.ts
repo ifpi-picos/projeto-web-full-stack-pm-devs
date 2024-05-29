@@ -14,7 +14,7 @@ export interface IMuralService {
   getAllMurals: () => Promise<HttpResponse<Mural[]>>;
   getMuralsByGroupId: (groupId: string) => Promise<HttpResponse<Mural[]>>;
   createMural: (data: Mural) => Promise<HttpResponse<Mural>>;
-  updateMural: ({ name, category, imgMural }: Mural, id: number) => Promise<HttpResponse<Mural>>;
+  updateMural: ({ name, imgMural }: Mural, id: number) => Promise<HttpResponse<Mural>>;
   removeMural: (id: number) => Promise<HttpResponse<Mural>>;
   generateCode: (groupId: string, muralId: number) => Promise<HttpResponse<string>>;
 }

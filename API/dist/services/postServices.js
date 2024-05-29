@@ -46,6 +46,26 @@ class PostService {
             };
         }
     }
+    async getPostByMuralId(muralId) {
+        try {
+            const posts = await this.postRepository.getPostByMuralId(muralId);
+            if (!posts || posts.length <= 0)
+                return {
+                    statusCode: 400,
+                    body: "Posts not found."
+                };
+            return {
+                statusCode: 200,
+                body: posts
+            };
+        }
+        catch (error) {
+            return {
+                statusCode: 500,
+                body: `Error: ${error}`
+            };
+        }
+    }
     async addPost(dataPost) {
         try {
             const post = await this.postRepository.addPost(dataPost);

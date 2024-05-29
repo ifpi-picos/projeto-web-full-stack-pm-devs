@@ -46,6 +46,27 @@ export class PostService implements IPostService {
     }
   }
 
+  async getPostByMuralId(muralId: number): Promise<HttpResponse<Post[]>> {
+    try {
+      const murals = await this.postRepository.getPostByMuralId(muralId);
+      
+      if(!murals || murals.length <= 0) return {
+        statusCode: 400,
+        body: "Posts not found."
+      }
+
+      return {
+        statusCode: 200,
+        body: murals
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: `Error: ${error}`
+      }
+    }
+  }
+
   async addPost(dataPost: Post): Promise<HttpResponse<Post>> {
     try {
       const post = await this.postRepository.addPost(dataPost);
