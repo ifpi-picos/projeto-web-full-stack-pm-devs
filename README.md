@@ -27,7 +27,10 @@ Executar o projeto:
 ```
 npm start:dev
 ```
-
+ou
+```
+npm run start:dev
+```
 ### Acesso:
 Para acessar a API: 
 <a>http://localhost:5001</a> (Verifique a porta *5001 ou 8000*)
