@@ -52,7 +52,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     }
   }
 
-  const { statusCode, body } = await new GroupService(repositoryGroup).updateGroup(group.name,group.imgGroup, id);
+  const { statusCode, body } = await new GroupService(repositoryGroup).updateGroup(group.name,id,group.imgGroup);
   res.status(statusCode).json(body);
 })
 

@@ -26,6 +26,13 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/mural/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const valueId = parseInt(id)
+  const { statusCode, body } = await new PostService(repositoryPost).getPostByMuralId(valueId);
+  res.status(statusCode).json(body);
+})
+
 router.post("/", async (req: Request, res: Response) => {
   const data: Pick<Post, "id" | "content" | "media" |"created_at" | "memberId"  | "muralId"> = req.body
 

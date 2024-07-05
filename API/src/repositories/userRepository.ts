@@ -73,7 +73,7 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async updateUser(id: string, { name, username, password, profile_image }: User): Promise<User | null> {
+  async updateUser(id: string, { name, username, password, profile_image, email }: User): Promise<User | null> {
     return await prisma.user.update({
       where: {
         id: id,
@@ -82,7 +82,8 @@ export class UserRepository implements IUserRepository {
         name,
         username,
         password,
-        profile_image
+        profile_image,
+        email
       }
     })
   }

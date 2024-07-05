@@ -109,15 +109,47 @@ export class UserService implements IUserService {
           body: "User not found.",
         };
 
+        if (dataUser.email || dataUser.username) {
+              
+          const userExistsEmail = dataUser.email 
+            ? await this.userRepository.getUserByEmail(dataUser.email)
+            : null;
+          const userExistsUsername = dataUser.username 
+            ? await this.userRepository.getUserByUsername(dataUser.username)
+            : null;
+    
+          if (userExistsEmail && userExistsEmail.id !== id) {
+            return {
+              statusCode: 400,
+              body: "Email already in use.",
+            };
+          }
+    
+          if (userExistsUsername && userExistsUsername.id !== id) {
+            return {
+              statusCode: 400,
+              body: "Username already in use.",
+            };
+          }
+        }
+      
+        if(dataUser.password){
+          dataUser.password = await hashPass(dataUser.password);
+          
+        }
+      
+
       const fields: (keyof Pick<
         User,
-        "name" | "username" | "password" | "profile_image"
-      >)[] = ["name", "username", "password", "profile_image"];
+        "name" | "username" | "password" | "profile_image" |"email"
+      >)[] = ["name", "username", "password", "profile_image", "email"];
       for (const field of fields) {
         if (!dataUser[field]) {
           dataUser[field] = userExists[field]!;
         }
       }
+
+      
 
       await this.userRepository.updateUser(id, dataUser);
 

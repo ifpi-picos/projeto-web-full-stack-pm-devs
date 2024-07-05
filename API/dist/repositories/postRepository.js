@@ -24,6 +24,18 @@ class PostRepository {
             throw new Error(`${error}`);
         }
     }
+    async getPostByMuralId(muralId) {
+        try {
+            return await prisma.post.findMany({
+                where: {
+                    muralId
+                }
+            });
+        }
+        catch (error) {
+            throw new Error(`${error}`);
+        }
+    }
     async addPost({ content, media, memberId, muralId }) {
         try {
             return await prisma.post.create({

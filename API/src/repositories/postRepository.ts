@@ -22,6 +22,17 @@ export class PostRepository implements IPostRepository {
       throw new Error(`${error}`);
     }
   }
+  async getPostByMuralId(muralId: number): Promise<Post[]> {
+    try {
+      return await prisma.post.findMany({
+        where: {
+          muralId
+        }
+      })
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
+  }
   async addPost({ content, media, memberId, muralId }: Post): Promise<Post | null> {
     try {
       return await prisma.post.create({
